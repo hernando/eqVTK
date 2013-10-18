@@ -33,10 +33,21 @@ endif()
 
 include(Common)
 
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Debug)
+endif(NOT CMAKE_BUILD_TYPE)
+
 ###############################################################################
 ## EXTERNAL DEPENDENCIES
 
 include(FindPackages)
+include(${VTK_USE_FILE})
+
+###############################################################################
+## SUBPROJECTS
+
+add_subdirectory(eqVTK)
+
 
 
 
