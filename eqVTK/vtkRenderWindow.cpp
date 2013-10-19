@@ -21,15 +21,20 @@
 namespace eqVTK
 {
 
-vtkRenderWindow *vtkRenderWindow::New(eq::Window *window)
+vtkRenderWindow *vtkRenderWindow::New()
 {
-    vtkRenderWindow *w = new vtkRenderWindow(window);
+    vtkRenderWindow *w = new vtkRenderWindow();
     return w;
 }
 
-vtkRenderWindow::vtkRenderWindow(eq::Window *window)
-    : _window(window)
+vtkRenderWindow::vtkRenderWindow()
+    : _window(0)
 {
+}
+
+void vtkRenderWindow::setWindow(eq::Window *window)
+{
+    _window = window;
     const eq::PixelViewport &pvp = _window->getPixelViewport();
     Size[0] = pvp.w;
     Size[1] = pvp.h;

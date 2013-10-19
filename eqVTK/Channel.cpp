@@ -17,22 +17,14 @@
  */
 
 #include "eq/GL/glew.h"
-#include "Channel.h"
-#include "vtkCamera.h"
 
-#include "vtkRenderWindow.h"
+#include "Channel.h"
+#include "Config.h"
+#include "Client.h"
 #include "Pipe.h"
 
 #include <eq/client/gl.h>
 
-#include <vtkActor.h>
-#include <vtkCamera.h>
-#include <vtkProperty.h>
-#include <vtkPolyDataMapper.h>
-#include <vtkSphereSource.h>
-#include <vtkRenderWindow.h>
-#include <vtkRenderer.h>
-#include <vtkSmartPointer.h>
 
 namespace eqVTK
 {
@@ -48,63 +40,13 @@ void identity(eq::Matrix4f &m)
 
 }
 
-class Channel::Impl
-{
-public:
-    void createPipeline(Channel &channel)
-    {
-        sphere = vtkSphereSource::New();
-        sphere->SetCenter(0, 0, 0);
-        sphere->SetRadius(1);
-
-        mapper = vtkPolyDataMapper::New();
-        mapper->SetInputConnection(sphere->GetOutputPort());
-
-        actor = vtkActor::New();
-        actor->SetMapper(mapper);
-        actor->GetProperty()->SetColor(1, 0, 0);
-
-        renderer = vtkRenderer::New();
-        renderer->AddActor(actor);
-        renderer->SetBackground(0.2, 0.3, 0.4);
-
-        camera = vtkCamera::New();
-        camera->setChannel(&channel);
-
-        window = vtkRenderWindow::New(channel.getWindow());
-        window->AddRenderer(renderer);
-
-    }
-
-    void drawFrame(const Channel &channel, const eq::Matrix4f &modelview)
-    {
-        camera->setModelview(modelview);
-        renderer->SetActiveCamera(camera);
-        eq::Viewport vp = channel.getViewport();
-        renderer->SetViewport(vp.x, vp.y, vp.w, vp.h);
-
-        window->Render();
-        //const eq::Vector3ub color = channel.getUniqueColor();
-    }
-
-private:
-    vtkSmartPointer<vtkSphereSource> sphere;
-    vtkSmartPointer<vtkPolyDataMapper> mapper;
-    vtkSmartPointer<vtkActor> actor;
-    vtkSmartPointer<vtkRenderer> renderer;
-    vtkSmartPointer<vtkCamera> camera;
-    vtkSmartPointer<vtkRenderWindow> window;
-};
-
 Channel::Channel(eq::Window* parent)
     : eq::Channel( parent )
-    , _impl(new Impl())
 {
 }
 
 Channel::~Channel()
 {
-    delete _impl;
 }
 
 
@@ -113,7 +55,9 @@ bool Channel::configInit(const eq::uint128_t &initID)
     if (!eq::Channel::configInit(initID))
         return false;
 
-    _impl->createPipeline(*this);
+    Config *config = static_cast<Config*>(getConfig());
+    Client *client = static_cast<Client*>(config->getClient().get());
+    _pipeline = client->createPipeline(config->getInitData());
 
     return true;
 }
@@ -148,9 +92,7 @@ void Channel::frameDraw(const eq::uint128_t &)
     eq::Matrix4f modelview = (frameData.getCameraRotation() * translation *
                               frameData.getModelRotation());
 
-    std::cout << modelview << std::endl;
-
-    _impl->drawFrame(*this, modelview);
+    _pipeline->drawFrame(*this, modelview);
 }
 
 void Channel::frameAssemble(const eq::uint128_t &frameID)

@@ -16,18 +16,18 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "eqVTK.h"
+#include "Client.h"
 
 #include "Config.h"
 
 namespace eqVTK
 {
 
-eqVTK::eqVTK()
+Client::Client()
 {
 }
 
-int eqVTK::run()
+int Client::run()
 {
     /* Conecting to the server */
     eq::ServerPtr server = new eq::Server;

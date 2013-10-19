@@ -16,44 +16,39 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef EQVTK_CHANNEL_H
-#define EQVTK_CHANNEL_H
+#ifndef EQVTK_EQVTK_H
+#define EQVTK_EQVTK_H
+
+#include <eq/eq.h>
 
 #include "Pipeline.h"
 
-#include <eq/client/channel.h>
+/**
+   An example application that does VTK and Equalizer integration.
+*/
 
 namespace eqVTK
 {
 
-class FrameData;
+class InitData;
 
-class Channel : public eq::Channel
+class Client : public eq::Client
 {
 public:
-    /* Public constructor and destructor */
+    /* Public constructors and destructor */
+    Client();
 
-    Channel(eq::Window* parent);
+    virtual ~Client() {}
 
-protected:
-    /* Protected constructors and destructor */
+    /* Public member functions */
+    int run();
 
-    virtual ~Channel();
-
-    /* Protected member functions */
-
-    virtual bool configInit(const eq::uint128_t &frameID);
-    virtual void frameClear(const eq::uint128_t &frameID);
-    virtual void frameDraw(const eq::uint128_t &frameID);
-    virtual void frameAssemble(const eq::uint128_t &frameID);
-    virtual void frameReadback(const eq::uint128_t &frameID);
-
-private:
-    /* Private member fuctions */
-    const FrameData &_getFrameData() const;
-    PipelinePtr _pipeline;
+    /**
+       Invoked from Channel::initConfig to create a per channel pipeline
+    */
+    virtual PipelinePtr createPipeline(const InitData &initData) const = 0;
 };
 
 }
-#endif // EQ_PLY_CHANNEL_H
+#endif
 

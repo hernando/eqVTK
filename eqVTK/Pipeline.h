@@ -16,31 +16,42 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef EQVTK_EQVTK_H
-#define EQVTK_EQVTK_H
+#ifndef EQVTK_PIPELINE_H
+#define EQVTK_PIPELINE_H
 
-#include <eq/eq.h>
+#include <lunchbox/referenced.h>
+#include <lunchbox/refPtr.h>
+#include <eq/client/types.h>
 
-
-/**
-   An example application that does VTK and Equalizer integration.
-*/
+class vtkActor;
 
 namespace eqVTK
 {
 
-class eqVTK : public eq::Client
+class Channel;
+
+class Pipeline : public lunchbox::Referenced
 {
 public:
     /* Public constructors and destructor */
-    eqVTK();
+    Pipeline();
 
-    virtual ~eqVTK() {}
+    virtual ~Pipeline();
 
     /* Public member functions */
-    int run();
+    void drawFrame(Channel &channel, const eq::Matrix4f &modelview);
+
+protected:
+    virtual void drawRange(const eq::Range &range) = 0;
+
+    void addActor(vtkActor *actor);
+
+private:
+    class Impl;
+    Impl *_impl;
 };
+
+typedef lunchbox::RefPtr<Pipeline> PipelinePtr;
 
 }
 #endif
-

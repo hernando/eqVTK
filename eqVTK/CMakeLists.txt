@@ -15,18 +15,21 @@
 # this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-add_executable(eqVTK
+add_library(eqVTK SHARED
   Channel.cpp
+  Client.cpp
   Config.cpp
   FrameData.cpp
   InitData.cpp
   Node.cpp
   Pipe.cpp
+  Pipeline.cpp
   Window.cpp
-  eqVTK.cpp
   vtkRenderWindow.cpp
-  vtkCamera.cpp
-  main.cpp
-)
+  vtkCamera.cpp)
 
-target_link_libraries(eqVTK ${VTK_LIBRARIES} ${EQUALIZER_LIBRARIES})
+add_executable(hello hello.cpp)
+target_link_libraries(hello eqVTK ${VTK_LIBRARIES} ${EQUALIZER_LIBRARIES})
+
+#add_executable(isosurface isosurface.cpp)
+#target_link_libraries(isosurface eqVTK ${VTK_LIBRARIES} ${EQUALIZER_LIBRARIES})

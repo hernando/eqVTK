@@ -73,9 +73,6 @@ protected:
 private:
     /* Private member variables */
 
-    int _spinX, _spinY;
-    int _advance;
-
     InitData _initData;
     FrameData _frameData;
 

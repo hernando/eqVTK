@@ -16,12 +16,19 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "eqVTK.h"
 #include "Channel.h"
+#include "Client.h"
 #include "Config.h"
 #include "Node.h"
 #include "Pipe.h"
+#include "Pipeline.h"
 #include "Window.h"
+
+#include <vtkActor.h>
+#include <vtkProperty.h>
+#include <vtkPolyDataMapper.h>
+#include <vtkSphereSource.h>
+#include <vtkSmartPointer.h>
 
 using namespace eqVTK;
 
@@ -50,6 +57,44 @@ public:
     }
 };
 
+class Hello : public Client
+{
+public:
+    PipelinePtr createPipeline(const InitData &) const
+    {
+        return new Pipeline();
+    }
+
+private:
+    /* Private declarations */
+    class Pipeline : public eqVTK::Pipeline
+    {
+    public:
+        Pipeline()
+        {
+            _sphere = vtkSphereSource::New();
+            _sphere->SetCenter(0, 0, 0);
+            _sphere->SetRadius(1);
+
+            _mapper = vtkPolyDataMapper::New();
+            _mapper->SetInputConnection(_sphere->GetOutputPort());
+
+            _actor = vtkActor::New();
+            _actor->SetMapper(_mapper);
+            _actor->GetProperty()->SetColor(1, 0, 0);
+
+            addActor(_actor);
+        }
+
+        virtual void drawRange(const eq::Range &) {}
+
+    private:
+        vtkSmartPointer<vtkSphereSource> _sphere;
+        vtkSmartPointer<vtkPolyDataMapper> _mapper;
+        vtkSmartPointer<vtkActor> _actor;
+    };
+};
+
 int main(int argc, char *argv[])
 {
     NodeFactory factory;
@@ -63,18 +108,18 @@ int main(int argc, char *argv[])
     InitData initData;
 
     /* Initializing local client node */
-    lunchbox::RefPtr<eqVTK::eqVTK> client(new eqVTK::eqVTK());
-    if (!client->initLocal(argc, argv))
+    lunchbox::RefPtr<Hello> app(new Hello());
+    if (!app->initLocal(argc, argv))
     {
-        LBERROR << "Can't init client" << std::endl;
+        LBERROR << "Can't init app" << std::endl;
         eq::exit();
         return EXIT_FAILURE;
     }
 
-    client->run();
+    app->run();
 
-    client->exitLocal();
-    client = 0;
+    app->exitLocal();
+    app = 0;
 
     eq::exit();
 

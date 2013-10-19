@@ -23,9 +23,6 @@ namespace eqVTK
 
 Config::Config(eq::ServerPtr parent)
     : eq::Config(parent)
-    , _spinX(0)
-    , _spinY(0)
-    , _advance(0)
     , _redraw(true)
 {
 }
@@ -97,42 +94,18 @@ uint32_t Config::startFrame()
 
 bool Config::needRedraw()
 {
-    return (_spinX != 0 || _spinY != 0 || _redraw);
+    return _redraw;
 }
 
 bool Config::handleEvent(const eq::ConfigEvent* event)
 {
     switch (event->data.type)
     {
-        case eq::Event::CHANNEL_POINTER_BUTTON_RELEASE:
-        {
-            const eq::PointerEvent& releaseEvent =
-                event->data.pointerButtonRelease;
-            if (releaseEvent.buttons == eq::PTR_BUTTON_NONE)
-            {
-                if (releaseEvent.button == eq::PTR_BUTTON1)
-                {
-                    _spinX = releaseEvent.dy;
-                    _spinY = releaseEvent.dx;
-                    _redraw = true;
-                    return true;
-                }
-                if (releaseEvent.button == eq::PTR_BUTTON2)
-                {
-                    _advance = -releaseEvent.dy;
-                    _redraw = true;
-                    return true;
-                }
-            }
-            break;
-        }
         case eq::Event::CHANNEL_POINTER_MOTION:
         {
             switch (event->data.pointerMotion.buttons)
             {
               case eq::PTR_BUTTON1:
-                  _spinX = 0;
-                  _spinY = 0;
                   _frameData.spinModel(
                       -0.005 * event->data.pointerMotion.dy,
                       -0.005 * event->data.pointerMotion.dx, 0);
@@ -147,8 +120,8 @@ bool Config::handleEvent(const eq::ConfigEvent* event)
                   return true;
 
               case eq::PTR_BUTTON3:
-                  _advance = event->data.pointerMotion.dy;
-                  _frameData.moveCamera(0, 0, 0.005 * _advance);
+                  _frameData.moveCamera(
+                      0, 0, 0.005 * event->data.pointerMotion.dy);
                   _redraw = true;
                   return true;
             }

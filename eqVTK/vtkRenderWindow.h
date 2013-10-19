@@ -29,7 +29,13 @@ namespace eqVTK
 class vtkRenderWindow : public vtkOpenGLRenderWindow
 {
 public:
-    static vtkRenderWindow *New(eq::Window *window);
+    /* Public static member functions */
+
+    static vtkRenderWindow *New();
+
+    /* Public member functions */
+
+    void setWindow(eq::Window *window);
 
     virtual void OpenGLInit();
 
@@ -65,10 +71,14 @@ public:
     virtual void DestroyWindow();
 
 private:
+    /* Private member variables */
+
     eq::Window *_window;
     int _screenSize[2];
 
-    vtkRenderWindow(eq::Window *window);
+    /* Private constructors and destructor */
+
+    vtkRenderWindow();
 
     virtual ~vtkRenderWindow() {}
 };
