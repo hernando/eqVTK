@@ -39,6 +39,12 @@ void vtkCamera::setChannel(Channel *channel)
 
 void vtkCamera::setModelview(const eq::Matrix4f &matrix)
 {
+    /* For out purpose, this enough to get the default headlight right */
+    eq::Matrix4d matrixd;
+    eq::Matrix4d(matrix).inverse(matrixd);
+    eq::Vector4d pos = matrixd * eq::Vector4f(0, 0, 0, 1);
+    SetPosition(pos[0], pos[1], pos[2]);
+
     _modelview = matrix;
 }
 
