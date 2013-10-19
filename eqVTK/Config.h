@@ -52,6 +52,16 @@ public:
         return _initData;
     }
 
+    FrameData& getFrameData()
+    {
+        return _frameData;
+    }
+
+    const FrameData& getFrameData() const
+    {
+        return _frameData;
+    }
+
     /** Map per-config data to the local node process
 
         Invoked from Node::configInit

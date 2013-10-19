@@ -40,6 +40,7 @@ public:
     /* Public member functions */
     void reset();
 
+    void setRotationPivot(const eq::Vector3f &position);
     void setCameraPosition(const eq::Vector3f &position);
     void setRotation(const eq::Vector3f &rotation);
     void setModelRotation(const eq::Vector3f &rotation);
@@ -47,6 +48,10 @@ public:
     void spinModel(const float x, const float y, const float z);
     void moveCamera(const float x, const float y, const float z);
 
+    const eq::Vector3f &getRotationPivot() const
+    {
+        return _pivot;
+    }
     const eq::Matrix4f &getCameraRotation() const
     {
         return _rotation;
@@ -84,6 +89,7 @@ protected:
 private:
     /* Private member attributes */
 
+    eq::Vector3f _pivot;
     eq::Matrix4f _rotation;
     eq::Matrix4f _modelRotation;
     eq::Vector3f _position;

@@ -36,14 +36,14 @@ void FrameData::serialize(co::DataOStream &os, const uint64_t dirtyBits)
 {
     co::Serializable::serialize(os, dirtyBits);
     if (dirtyBits & DIRTY_CAMERA)
-        os << _position << _rotation << _modelRotation;
+        os << _position << _pivot << _rotation << _modelRotation;
 }
 
 void FrameData::deserialize(co::DataIStream &is, const uint64_t dirtyBits)
 {
     co::Serializable::deserialize(is, dirtyBits);
     if (dirtyBits & DIRTY_CAMERA)
-        is >> _position >> _rotation >> _modelRotation;
+        is >> _position >> _pivot >> _rotation >> _modelRotation;
 }
 
 void FrameData::spinCamera(const float x, const float y)
@@ -64,7 +64,7 @@ void FrameData::spinModel(const float x, const float y, const float z)
     _modelRotation.pre_rotate_x(x);
     _modelRotation.pre_rotate_y(y);
     _modelRotation.pre_rotate_z(z);
-    setDirty(DIRTY_CAMERA );
+    setDirty(DIRTY_CAMERA);
 }
 
 void FrameData::moveCamera(const float x, const float y, const float z)
@@ -72,13 +72,19 @@ void FrameData::moveCamera(const float x, const float y, const float z)
     _position.x() += x;
     _position.y() += y;
     _position.z() += z;
-    setDirty(DIRTY_CAMERA );
+    setDirty(DIRTY_CAMERA);
+}
+
+void FrameData::setRotationPivot(const eq::Vector3f &pivot)
+{
+    _pivot = pivot;
+    setDirty(DIRTY_CAMERA);
 }
 
 void FrameData::setCameraPosition(const eq::Vector3f &position)
 {
     _position = position;
-    setDirty(DIRTY_CAMERA );
+    setDirty(DIRTY_CAMERA);
 }
 
 void FrameData::setRotation(const eq::Vector3f &rotation)

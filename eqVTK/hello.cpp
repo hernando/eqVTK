@@ -65,6 +65,8 @@ public:
         return new Pipeline();
     }
 
+    virtual void initConfig(Config &) {}
+
 private:
     /* Private declarations */
     class Pipeline : public eqVTK::Pipeline

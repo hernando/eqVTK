@@ -57,6 +57,8 @@ void vtkCamera::Render(vtkRenderer *)
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
+    /* Harcoding near & far to something that works for all the demos */
+    _channel->setNearFar(0.1, 1000);
     _channel->applyFrustum();
 
     glMatrixMode(GL_MODELVIEW);

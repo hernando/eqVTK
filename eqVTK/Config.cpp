@@ -17,6 +17,7 @@
  */
 
 #include "Config.h"
+#include "Client.h"
 
 namespace eqVTK
 {
@@ -48,6 +49,8 @@ bool Config::init()
         _deregisterDistributedObjects();
         return false;
     }
+
+    static_cast<Client&>(*getClient()).initConfig(*this);
 
     return true;
 }

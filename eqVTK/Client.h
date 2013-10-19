@@ -31,6 +31,7 @@ namespace eqVTK
 {
 
 class InitData;
+class Config;
 
 class Client : public eq::Client
 {
@@ -47,6 +48,8 @@ public:
        Invoked from Channel::initConfig to create a per channel pipeline
     */
     virtual PipelinePtr createPipeline(const InitData &initData) const = 0;
+
+    virtual void initConfig(Config &config) = 0;
 };
 
 }
