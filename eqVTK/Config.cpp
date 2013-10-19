@@ -113,15 +113,15 @@ bool Config::handleEvent(const eq::ConfigEvent* event)
                   return true;
 
               case eq::PTR_BUTTON2:
-                  _frameData.moveCamera(0.0005 * event->data.pointerMotion.dx,
-                                        -0.0005 * event->data.pointerMotion.dy,
+                  _frameData.moveCamera(0.05 * event->data.pointerMotion.dx,
+                                        -0.05 * event->data.pointerMotion.dy,
                                         0);
                   _redraw = true;
                   return true;
 
               case eq::PTR_BUTTON3:
                   _frameData.moveCamera(
-                      0, 0, 0.005 * event->data.pointerMotion.dy);
+                      0, 0, 0.05 * event->data.pointerMotion.dy);
                   _redraw = true;
                   return true;
             }

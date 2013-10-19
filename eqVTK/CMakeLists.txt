@@ -31,5 +31,8 @@ add_library(eqVTK SHARED
 add_executable(hello hello.cpp)
 target_link_libraries(hello eqVTK ${VTK_LIBRARIES} ${EQUALIZER_LIBRARIES})
 
-#add_executable(isosurface isosurface.cpp)
-#target_link_libraries(isosurface eqVTK ${VTK_LIBRARIES} ${EQUALIZER_LIBRARIES})
+
+configure_file(paths.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/paths.cpp)
+add_executable(isosurface isosurface.cpp
+  ${CMAKE_CURRENT_BINARY_DIR}/paths.cpp)
+target_link_libraries(isosurface eqVTK ${VTK_LIBRARIES} ${EQUALIZER_LIBRARIES})

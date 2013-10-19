@@ -37,6 +37,16 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Debug)
 endif(NOT CMAKE_BUILD_TYPE)
 
+include_directories(${CMAKE_SOURCE_DIR})
+set(_paths_cpp_in ${CMAKE_SOURCE_DIR}/common/paths.cpp.in)
+macro(CONFIGURE_PATHS PATHS_FILE)
+  set(CONFIG_SHADER_PATH ${CMAKE_CURRENT_SOURCE_DIR}/shaders)
+  set(CONFIG_DATA_PATH ${CMAKE_SOURCE_DIR}/datasets)
+  configure_file(${_paths_cpp_in} ${CMAKE_CURRENT_BINARY_DIR}/paths.cpp)
+
+  set(${PATHS_FILE} ${CMAKE_CURRENT_BINARY_DIR}/paths.cpp)
+endmacro()
+
 ###############################################################################
 ## EXTERNAL DEPENDENCIES
 

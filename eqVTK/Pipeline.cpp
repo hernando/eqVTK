@@ -63,6 +63,8 @@ void Pipeline::drawFrame(Channel &channel, const eq::Matrix4f &modelview)
     eq::Viewport vp = channel.getViewport();
     _impl->renderer->SetViewport(vp.x, vp.y, vp.w, vp.h);
 
+    drawRange(channel.getRange());
+
     _impl->window->Render();
 }
 

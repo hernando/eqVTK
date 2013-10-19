@@ -1,0 +1,13 @@
+#include "paths.h"
+
+#include <iostream>
+
+namespace paths
+{
+
+std::string getDataPath()
+{
+    return "${CMAKE_SOURCE_DIR}/datasets";
+}
+
+}
