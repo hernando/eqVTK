@@ -20,6 +20,9 @@
 
 #include "Config.h"
 
+namespace eqVTK
+{
+
 eqVTK::eqVTK()
 {
 }
@@ -83,4 +86,6 @@ int eqVTK::run()
         LBERROR << "Client::disconnectServer failed" << std::endl;
 
     return EXIT_SUCCESS;
+}
+
 }

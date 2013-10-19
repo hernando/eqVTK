@@ -20,6 +20,9 @@
 
 #include "Config.h"
 
+namespace eqVTK
+{
+
 bool Pipe::configInit(const eq::uint128_t &initID)
 {
     if (!eq::Pipe::configInit(initID))
@@ -46,3 +49,4 @@ void Pipe::frameStart(const eq::uint128_t &frameID, const uint32_t frameNumber)
     _frameData.sync(frameID);
 }
 
+}

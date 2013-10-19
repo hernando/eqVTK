@@ -23,6 +23,8 @@
 #include "Pipe.h"
 #include "Window.h"
 
+using namespace eqVTK;
+
 class NodeFactory : public eq::NodeFactory
 {
 public:
@@ -61,7 +63,7 @@ int main(int argc, char *argv[])
     InitData initData;
 
     /* Initializing local client node */
-    lunchbox::RefPtr<eqVTK> client(new eqVTK());
+    lunchbox::RefPtr<eqVTK::eqVTK> client(new eqVTK::eqVTK());
     if (!client->initLocal(argc, argv))
     {
         LBERROR << "Can't init client" << std::endl;

@@ -16,29 +16,44 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "Node.h"
+#ifndef EQVTK_CAMERA_H
+#define EQVTK_CAMERA_H
 
-#include "Config.h"
+#include <vtkCamera.h>
+
+#include <eq/client/types.h>
 
 namespace eqVTK
 {
 
-bool Node::configInit(const eq::uint128_t& initID)
+class Channel;
+
+class vtkCamera : public ::vtkCamera
 {
-    /* Running asynchronously */
-    if (getIAttribute(IATTR_THREAD_MODEL) == eq::UNDEFINED)
-        setIAttribute(IATTR_THREAD_MODEL, eq::ASYNC);
+public:
+  static vtkCamera *New();
 
-    if (!eq::Node::configInit(initID))
-        return false;
+  void setChannel(Channel *channel);
 
-    Config *config = static_cast<Config*>(getConfig());
-    if (!isApplicationNode() &&
-        !config->loadInitData(eq::UUID(initID)))
-    {
-        return false;
-    }
-    return true;
+  void setModelview(const eq::Matrix4f &matrix);
+
+  void Render(vtkRenderer *ren);
+
+  void UpdateViewport(vtkRenderer *ren);
+
+protected:
+  vtkCamera() {}
+
+  ~vtkCamera() {}
+
+private:
+  Channel *_channel;
+  eq::Matrix4f _modelview;
+
+  vtkCamera(const vtkCamera&);  // Not implemented.
+
+  void operator=(const vtkCamera&);  // Not implemented.
+};
+
 }
-
-}
+#endif

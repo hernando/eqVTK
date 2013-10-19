@@ -18,6 +18,9 @@
 
 #include "Config.h"
 
+namespace eqVTK
+{
+
 Config::Config(eq::ServerPtr parent)
     : eq::Config(parent)
     , _spinX(0)
@@ -71,7 +74,16 @@ void Config::_deregisterDistributedObjects()
 bool Config::loadInitData(const eq::UUID& id)
 {
     LBASSERT(!_initData.isAttached());
-    return getClient()->syncObject(&_initData, getApplicationNode(), id);
+#if CO_VERSION_LT(1,1,1)
+    if (!mapObject(&_initData, id))
+        return false;
+    /* This data is static, we can unmap immediately */
+    unmapObject(&_initData);
+#else
+    if (!syncObject(&_initData, getApplicationNode(), id))
+            return false;
+#endif
+    return true;
 }
 
 uint32_t Config::startFrame()
@@ -85,7 +97,7 @@ uint32_t Config::startFrame()
 
 bool Config::needRedraw()
 {
-    return (_spinX != 0 || _spinY != 0 || _advance != 0 || _redraw);
+    return (_spinX != 0 || _spinY != 0 || _redraw);
 }
 
 bool Config::handleEvent(const eq::ConfigEvent* event)
@@ -135,7 +147,7 @@ bool Config::handleEvent(const eq::ConfigEvent* event)
                   return true;
 
               case eq::PTR_BUTTON3:
-                  _advance = -event->data.pointerMotion.dy;
+                  _advance = event->data.pointerMotion.dy;
                   _frameData.moveCamera(0, 0, 0.005 * _advance);
                   _redraw = true;
                   return true;
@@ -172,3 +184,4 @@ bool Config::handleEvent(eq::EventICommand command)
     return _redraw;
 }
 
+}

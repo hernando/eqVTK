@@ -16,8 +16,11 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#include "eq/GL/glew.h"
 #include "Channel.h"
+#include "vtkCamera.h"
 
+#include "vtkRenderWindow.h"
 #include "Pipe.h"
 
 #include <eq/client/gl.h>
@@ -30,6 +33,9 @@
 #include <vtkRenderWindow.h>
 #include <vtkRenderer.h>
 #include <vtkSmartPointer.h>
+
+namespace eqVTK
+{
 
 namespace
 {
@@ -45,27 +51,39 @@ void identity(eq::Matrix4f &m)
 class Channel::Impl
 {
 public:
-    void createPipeline()
+    void createPipeline(Channel &channel)
     {
-        //std::cout << "createPipeline" << std::endl;
-        //sphere = vtkSphereSource::New();
-        //sphere->SetCenter(0, 0, 0);
-        //sphere->SetRadius(1);
-        //
-        //mapper = vtkPolyDataMapper::New();
-        //mapper->SetInputConnection(sphere->GetOutputPort());
-        //
-        //actor = vtkActor::New();
-        //actor->SetMapper(mapper);
-        //actor->GetProperty()->SetColor(1, 0, 0);
-        //
-        //renderer = vtkRenderer::New();
-        //renderer->AddActor(actor);
-        //renderer->SetBackground(0.2, 0.3, 0.4);
+        sphere = vtkSphereSource::New();
+        sphere->SetCenter(0, 0, 0);
+        sphere->SetRadius(1);
+
+        mapper = vtkPolyDataMapper::New();
+        mapper->SetInputConnection(sphere->GetOutputPort());
+
+        actor = vtkActor::New();
+        actor->SetMapper(mapper);
+        actor->GetProperty()->SetColor(1, 0, 0);
+
+        renderer = vtkRenderer::New();
+        renderer->AddActor(actor);
+        renderer->SetBackground(0.2, 0.3, 0.4);
+
+        camera = vtkCamera::New();
+        camera->setChannel(&channel);
+
+        window = vtkRenderWindow::New(channel.getWindow());
+        window->AddRenderer(renderer);
+
     }
 
-    void drawFrame(const Channel &, const eq::Matrix4f &)
+    void drawFrame(const Channel &channel, const eq::Matrix4f &modelview)
     {
+        camera->setModelview(modelview);
+        renderer->SetActiveCamera(camera);
+        eq::Viewport vp = channel.getViewport();
+        renderer->SetViewport(vp.x, vp.y, vp.w, vp.h);
+
+        window->Render();
         //const eq::Vector3ub color = channel.getUniqueColor();
     }
 
@@ -74,6 +92,8 @@ private:
     vtkSmartPointer<vtkPolyDataMapper> mapper;
     vtkSmartPointer<vtkActor> actor;
     vtkSmartPointer<vtkRenderer> renderer;
+    vtkSmartPointer<vtkCamera> camera;
+    vtkSmartPointer<vtkRenderWindow> window;
 };
 
 Channel::Channel(eq::Window* parent)
@@ -93,7 +113,7 @@ bool Channel::configInit(const eq::uint128_t &initID)
     if (!eq::Channel::configInit(initID))
         return false;
 
-    _impl->createPipeline();
+    _impl->createPipeline(*this);
 
     return true;
 }
@@ -117,18 +137,16 @@ void Channel::frameClear(const eq::uint128_t &)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void Channel::frameDraw(const eq::uint128_t &frameID)
+void Channel::frameDraw(const eq::uint128_t &)
 {
-    eq::Channel::frameDraw(frameID);
-
     const FrameData &frameData = _getFrameData();
     const eq::Vector3f &position = frameData.getCameraPosition();
 
-    eq::Matrix4f modelview = frameData.getCameraRotation();
     eq::Matrix4f translation;
     identity(translation);
     translation.set_translation(position);
-    modelview = frameData.getModelRotation() * translation * modelview;
+    eq::Matrix4f modelview = (frameData.getCameraRotation() * translation *
+                              frameData.getModelRotation());
 
     std::cout << modelview << std::endl;
 
@@ -149,4 +167,6 @@ const FrameData& Channel::_getFrameData() const
 {
     const Pipe* pipe = static_cast<const Pipe*>(getPipe());
     return pipe->getFrameData();
+}
+
 }

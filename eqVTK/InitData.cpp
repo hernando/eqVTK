@@ -21,6 +21,9 @@
 #include <co/dataOStream.h>
 #include <co/dataIStream.h>
 
+namespace eqVTK
+{
+
 InitData::InitData()
     : frameDataID()
 {}
@@ -40,3 +43,4 @@ void InitData::applyInstanceData(co::DataIStream &is)
     LBASSERT(frameDataID != 0);
 }
 
+}

@@ -23,6 +23,9 @@
 
 #include "FrameData.h"
 
+namespace eqVTK
+{
+
 /**
    The representation of GPU device
 
@@ -53,4 +56,5 @@ private:
     FrameData _frameData;
 };
 
+}
 #endif

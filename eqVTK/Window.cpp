@@ -18,12 +18,15 @@
 
 #include "Window.h"
 
-bool Window::configInitGL( const eq::uint128_t& initID )
+namespace eqVTK
 {
-    if( !eq::Window::configInitGL( initID ))
+
+bool Window::configInitGL(const eq::uint128_t& initID)
+{
+    if (!eq::Window::configInitGL(initID))
         return false;
 
     return true;
 }
 
-
+}

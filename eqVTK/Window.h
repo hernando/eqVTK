@@ -21,6 +21,9 @@
 
 #include <eq/client/window.h>
 
+namespace eqVTK
+{
+
 /**
  */
 class Window : public eq::Window
@@ -36,4 +39,5 @@ protected:
     virtual bool configInitGL(const eq::uint128_t &initID);
 };
 
+}
 #endif

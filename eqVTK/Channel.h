@@ -21,6 +21,9 @@
 
 #include <eq/client/channel.h>
 
+namespace eqVTK
+{
+
 class FrameData;
 
 class Channel : public eq::Channel
@@ -50,5 +53,6 @@ private:
     Impl *_impl;
 };
 
+}
 #endif // EQ_PLY_CHANNEL_H
 

@@ -22,6 +22,9 @@
 #include <eq/client/types.h>
 #include <co/object.h>
 
+namespace eqVTK
+{
+
 class InitData : public co::Object
 {
 public:
@@ -40,5 +43,6 @@ protected:
     virtual void applyInstanceData(co::DataIStream &is);
 };
 
+}
 #endif
 

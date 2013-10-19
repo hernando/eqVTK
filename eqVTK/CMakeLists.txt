@@ -24,6 +24,8 @@ add_executable(eqVTK
   Pipe.cpp
   Window.cpp
   eqVTK.cpp
+  vtkRenderWindow.cpp
+  vtkCamera.cpp
   main.cpp
 )
 

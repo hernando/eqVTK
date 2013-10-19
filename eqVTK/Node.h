@@ -23,6 +23,9 @@
 
 #include <eq/eq.h>
 
+namespace eqVTK
+{
+
 /**
    Representation of a node in the cluster
 
@@ -40,4 +43,5 @@ protected:
     virtual bool configInit(const eq::uint128_t &initID);
 };
 
+}
 #endif

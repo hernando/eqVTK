@@ -24,6 +24,9 @@
 
 #include <eq/eq.h>
 
+namespace eqVTK
+{
+
 /**
  * The Config handles frame data and events
  */
@@ -83,4 +86,5 @@ private:
     void _deregisterDistributedObjects();
 };
 
+}
 #endif

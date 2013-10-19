@@ -26,6 +26,9 @@
    An example application that does VTK and Equalizer integration.
 */
 
+namespace eqVTK
+{
+
 class eqVTK : public eq::Client
 {
 public:
@@ -38,5 +41,6 @@ public:
     int run();
 };
 
+}
 #endif
 
