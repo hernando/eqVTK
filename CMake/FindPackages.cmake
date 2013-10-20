@@ -5,7 +5,7 @@ list(APPEND FIND_PACKAGES_DEFINES ${SYSTEM})
 
 find_package(Equalizer 1.7  REQUIRED)
 find_package(Boost 1.41.0  REQUIRED)
-find_package(VTK  NO_MODULE REQUIRED)
+find_package(VTK 6 NO_MODULE REQUIRED)
 
 if(EXISTS ${CMAKE_SOURCE_DIR}/CMake/FindPackagesPost.cmake)
   include(${CMAKE_SOURCE_DIR}/CMake/FindPackagesPost.cmake)
