@@ -199,7 +199,6 @@ void Isosurface::Pipeline::drawRange(const eq::Range &range)
     double scalarRange[2] = {_reader->GetOutput()->GetScalarRange()[0],
                              _reader->GetOutput()->GetScalarRange()[1]};
     _isosurfaceMapper->SetScalarRange(scalarRange);
-    std::cout<< scalarRange[0] << ' ' << scalarRange[1] << std::endl;
 
     vtkSmartPointer<vtkColorTransferFunction> transferFunction =
         vtkColorTransferFunction::New();
@@ -240,9 +239,7 @@ void Isosurface::initConfig(Config &config)
     /* Assuming a vertical field of view of 22.5º */
     float distance =
         (max[1] - min[1]) * 0.8 / atan(M_PI / 4) + (max[2] - min[2]) * 0.5;
-    /* Why do we have to negate the pivot here? Is this actually the camera
-       position or the model position? */
-    frameData.setCameraPosition(-pivot + eq::Vector3f(0, 0, -distance));
+    frameData.setCameraPosition(pivot + eq::Vector3f(0, 0, distance));
 }
 
 

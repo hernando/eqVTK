@@ -19,7 +19,7 @@
 #include "Pipeline.h"
 
 #include "Channel.h"
-
+#include "FrameData.h"
 #include "vtkCamera.h"
 #include "vtkRenderWindow.h"
 
@@ -51,13 +51,29 @@ Pipeline::~Pipeline()
     delete _impl;
 }
 
-void Pipeline::drawFrame(Channel &channel, const eq::Matrix4f &modelview)
+void Pipeline::drawFrame(Channel &channel, const FrameData &frameData)
 {
+    const eq::Vector3f &pivotPoint = frameData.getRotationPivot();
+    eq::Matrix4f pivot;
+    identity(pivot);
+    pivot.set_translation(-pivotPoint);
+    eq::Matrix4f pivotInverse;
+    identity(pivotInverse);
+    pivotInverse.set_translation(pivotPoint);
+
+    eq::Matrix4f translation;
+    identity(translation);
+    translation.set_translation(-frameData.getCameraPosition());
+
+    eq::Matrix4f modelview =
+        (frameData.getCameraRotation() * translation *
+         pivotInverse * frameData.getModelRotation()) * pivot;
+
     _impl->camera->setChannel(&channel);
     _impl->camera->setModelview(modelview);
-
-    _impl->window->setWindow(channel.getWindow());
-
+    /* This is neccesary to get lighting correct as we get closer to the
+       model */
+    _impl->camera->SetFocalPoint(pivotPoint[0], pivotPoint[1], pivotPoint[2]);
     _impl->renderer->SetActiveCamera(_impl->camera);
 
     eq::Viewport vp = channel.getViewport();
@@ -65,6 +81,7 @@ void Pipeline::drawFrame(Channel &channel, const eq::Matrix4f &modelview)
 
     drawRange(channel.getRange());
 
+    _impl->window->setWindow(channel.getWindow());
     _impl->window->Render();
 }
 

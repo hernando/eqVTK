@@ -40,6 +40,8 @@ public:
     /* Public member functions */
     void reset();
 
+    /* These methods should be unified because we are only moving either
+       the model or the camera */
     void setRotationPivot(const eq::Vector3f &position);
     void setCameraPosition(const eq::Vector3f &position);
     void setRotation(const eq::Vector3f &rotation);

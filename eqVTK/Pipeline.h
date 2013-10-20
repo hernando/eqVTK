@@ -21,6 +21,7 @@
 
 #include <lunchbox/referenced.h>
 #include <lunchbox/refPtr.h>
+
 #include <eq/client/types.h>
 
 class vtkActor;
@@ -29,6 +30,7 @@ namespace eqVTK
 {
 
 class Channel;
+class FrameData;
 
 class Pipeline : public lunchbox::Referenced
 {
@@ -39,7 +41,7 @@ public:
     virtual ~Pipeline();
 
     /* Public member functions */
-    void drawFrame(Channel &channel, const eq::Matrix4f &modelview);
+    void drawFrame(Channel &channel, const FrameData &frameData);
 
 protected:
     virtual void drawRange(const eq::Range &range) = 0;

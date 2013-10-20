@@ -84,23 +84,7 @@ void Channel::frameClear(const eq::uint128_t &)
 void Channel::frameDraw(const eq::uint128_t &)
 {
     const FrameData &frameData = _getFrameData();
-
-    eq::Matrix4f pivot;
-    identity(pivot);
-    pivot.set_translation(-frameData.getRotationPivot());
-    eq::Matrix4f pivotInverse;
-    identity(pivotInverse);
-    pivotInverse.set_translation(frameData.getRotationPivot());
-
-    eq::Matrix4f translation;
-    identity(translation);
-    translation.set_translation(frameData.getCameraPosition());
-
-    eq::Matrix4f modelview =
-        (frameData.getCameraRotation() * translation *
-         pivotInverse * frameData.getModelRotation()) * pivot;
-
-    _pipeline->drawFrame(*this, modelview);
+    _pipeline->drawFrame(*this, frameData);
 }
 
 void Channel::frameAssemble(const eq::uint128_t &frameID)

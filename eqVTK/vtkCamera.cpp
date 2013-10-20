@@ -39,7 +39,8 @@ void vtkCamera::setChannel(Channel *channel)
 
 void vtkCamera::setModelview(const eq::Matrix4f &matrix)
 {
-    /* For out purpose, this enough to get the default headlight right */
+    /* Assuming that the focal point is correctly set from outside,
+       this is enough to get the default headlight right. */
     eq::Matrix4d matrixd;
     eq::Matrix4d(matrix).inverse(matrixd);
     eq::Vector4d pos = matrixd * eq::Vector4f(0, 0, 0, 1);
@@ -62,7 +63,7 @@ void vtkCamera::Render(vtkRenderer *)
     _channel->applyFrustum();
 
     glMatrixMode(GL_MODELVIEW);
-    glPushMatrix(); /* It seems that VTK is doing a pop somewher. If removed
+    glPushMatrix(); /* It seems that VTK is doing a pop somewhere. If removed
                        a stack underflow will occur. */
 
     eq::Matrix4f m;
